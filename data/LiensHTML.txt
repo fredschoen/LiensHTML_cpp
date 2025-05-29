@@ -1,4 +1,5 @@
 https://www.youtube.com/watch?v=
+ligne vide
  LibreOffice Base #2 - Découvrir l'interface et les raccourcis clavier 
 https://www.youtube.com/watch?v=GXNrZ4qLtto&list=PL71v1Ar4okdxLdnPClc2Q11J5syiYvifp&index=3
  LibreofficeBase #3 - Créer des tables 
@@ -21,7 +22,9 @@ https://www.youtube.com/watch?v=GeZrWFitqEo
 https://www.youtube.com/watch?v=-P-u65BlnhI
  LibreOffice Base #12 - Ouvrir et fermer formulaire via un bouton de commande 
 https://www.youtube.com/watch?v=zgJF2_1hSYE
+
  LibreOffice Base #13 - Date du jour et heure - Fonctions HSQLDB 
 https://www.youtube.com/watch?v=QoONj4l2xNA
+
  LibreOffice Base #14 - Ajouter un sous-formulaire pour récupérer les données d'une autre table 
 https://www.youtube.com/watch?v=HH5gfpgWaVg

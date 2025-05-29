@@ -7,6 +7,7 @@
 //============================================================================
 // fonctions:
 // void fTxtVersHtml(void)
+//    la 1ère ligne conitent 'texteCherche'
 //============================================================================
 
 #include <iostream>     // std::cout
@@ -20,6 +21,9 @@ string nomFicSortie="";
 string nom1="liensHTML";
 
 string texteCherche="";
+string colonne1="";
+string colonne2="";
+int finFic=0;
 
 //============================================================================
 void fTxtVersHtml(void) {
@@ -47,29 +51,80 @@ void fTxtVersHtml(void) {
 
 	ficSortie	<< "<html>"<< endl;
 	ficSortie	<< "<body>"<< endl;
+	ficSortie	<< "<table>"<< endl;
 
-	// 1ère ligne = texteCherche
+	// la 1ère ligne conitent 'texteCherche'
 	getline(ficEntree, texteCherche); 
+	cout << "fTxtVersHtml, texteCherche=<" << texteCherche  << ">" << endl;
 	
 	//suite
-	string libelle="";
+	string colonne2="";
 	int pos=0;
 	
 	while(getline(ficEntree, ligneEntree)) {
 
+		//<<<<<<<<<colonne1 ou colonne2 <<<<<<<<<<<<<<<<<
 		pos = ligneEntree.find(texteCherche);
-		cout << pos << endl;
+		cout << "colonne1: pos=" << pos << " ; ligneEntree=" << ligneEntree << endl;
 		if (pos < 0 ) {
-			ficSortie	<< ligneEntree << "<br>" << endl;
+			colonne1 = ligneEntree;
+			colonne2 = "";
 		}
 		else {
-			libelle = ligneEntree.substr(pos+ texteCherche.length(), ligneEntree.length());
-			ficSortie	<< "<a href='"<< ligneEntree  << "' target='fenetre F1'>" << libelle << "</a>" << "<br>" << endl;
-	}
-		cout << "fTxtVersHtml, ligneEntree=" << ligneEntree << endl;
+			colonne1 = "";
+			colonne2 = ligneEntree.substr(pos+ texteCherche.length(), ligneEntree.length());
+		}
+		
+		//<<<<<<<<<colonne2<<<<<<<<<<<<<<<<<
+		finFic=0;
+		while ((pos < 0) && (finFic == 0)) {
+
+			if (getline(ficEntree, ligneEntree)){
+				pos = ligneEntree.find(texteCherche);
+				cout << "(while) pour colonne2: pos=" << pos << " ; ligneEntree=" << ligneEntree << endl;
+				if (pos < 0 ) {
+					//<<<<<<<<<assemblage d'une ligne "pur texte" <<<<<<<<<<<<<<<<<
+					ficSortie	<< "<tr>" << endl;
+					ficSortie	<< "<td>" << endl;
+					ficSortie	<< colonne1 << endl; //recupéré du coup d'avant
+					ficSortie	<< "</td>" << endl;
+					ficSortie	<< "<td>" << endl;
+					ficSortie	<< "</td>"<< endl;
+					ficSortie	<< "</tr>"<< endl;
+					//<<<<<<<<<et recup de la nouvelle colonne1 <<<<<<<<<<<<<<<<<
+					colonne1 = ligneEntree; // pour le coup d'apès
+					cout << "(while) nouvelle colonne1=" << colonne1  << endl;
+				}
+				else {
+					//on a la colonne2
+					colonne2 = ligneEntree.substr(pos+ texteCherche.length(), ligneEntree.length());
+					cout << "(while) colonne2: pos=" << pos << " ; ligneEntree=" << ligneEntree << endl;
+				}
+			}
+			else {
+				pos=-1;
+				finFic=1;
+				cout << "(while) finFic=" << finFic << endl;
+			}
+		}
+		
+		if (!(pos < 0)) {
+
+			//<<<<<<<<<assemblage de 2 colonnes <<<<<<<<<<<<<<<<<
+			cout << "fTxtVersHtml, colonne1=" << colonne1 << " ; colonne2=" << colonne2 << endl;
+			ficSortie	<< "<tr>" << endl;
+			ficSortie	<< "<td>" << endl;
+			ficSortie	<< colonne1 << endl;
+			ficSortie	<< "</td>" << endl;
+			ficSortie	<< "<td>" << endl;
+			ficSortie	<< "<a href='" << ligneEntree  << "' target='fenetre F1'>" << colonne2 << "</a>" << "<br>" << endl;
+			ficSortie	<< "</td>"<< endl;
+			ficSortie	<< "</tr>"<< endl;
+		}
 	}
 
 	cout << "fTxtVersHtml, nomFicEntree=" << nomFicEntree << " nomFicSortie=" << nomFicSortie << " : OK !!!!!!!!!" << endl;
+	ficSortie	<< "</table>"<< endl;
 	ficSortie	<< "</body>"<< endl;
 	ficSortie	<< "</html>"<< endl;
 
