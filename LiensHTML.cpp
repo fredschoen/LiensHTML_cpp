@@ -6,7 +6,7 @@
 // Description : conversion aller et retour Vcf/Csv
 //============================================================================
 // fonctions:
-// void fTxtVersHtml(void)
+// void fCsvVersHtml(void)
 //    la 1ère ligne conitent 'texteCherche'
 //============================================================================
 
@@ -25,9 +25,9 @@ string colonne1="";
 string colonne2="";
 
 //============================================================================
-void fTxtVersHtml(void) {
+void fCsvVersHtml(void) {
 	//============================================================================
-	std::cout << "exec fTxtVersHtml" << endl;
+	std::cout << "exec fCsvVersHtml" << endl;
 
 	cout << "nomFicEntree=[" << nomFicEntree << "]" << endl;
 	cout << "nomFicSortie=[" << nomFicSortie << "]"<< endl;
@@ -48,53 +48,61 @@ void fTxtVersHtml(void) {
 		return;
 	}
 
+	int posTab=0;
+	int posFin=0;
+	int posTexteCherche=0;
+	int numLigne=0;
+
+
 	ficSortie	<< "<html>"<< endl;
 	ficSortie	<< "<body>"<< endl;
 	ficSortie	<< "<table border='1'>"<< endl;
 
 	// la 1ère ligne conitent 'texteCherche'
-	getline(ficEntree, texteCherche); 
-	cout << "fTxtVersHtml, texteCherche=<" << texteCherche  << ">" << endl;
+	getline(ficEntree, ligneEntree); 
+	numLigne+=1;
+	posFin=ligneEntree.size();
+	if (posFin>2) {
+			posTab = ligneEntree.find("\t");
+			texteCherche=ligneEntree.substr(posTab+1,posFin);
+			cout << "fCsvVersHtml, texteCherche=" << texteCherche << endl;
+	} else {
+		texteCherche="azertyuiop1234567890"; //cas impossible
+	}
+	cout << "fCsvVersHtml, texteCherche=<" << texteCherche  << ">" << endl;
 	
 	//suite
 	string colonne2="";
-	int pos=0;
+	string libelle="";
 	
 	while(getline(ficEntree, ligneEntree)) {
 
-		//<<<<<<<<<colonne1 ou colonne2 <<<<<<<<<<<<<<<<<
-		pos = ligneEntree.find(texteCherche);
-		if (pos < 0 ) {
-			//<<<<<<<<<ecrire colonne 1 memorisée et seule
-			if (colonne1.length()>0){
-				cout << "fTxtVersHtml, colonne1 seule=" << colonne1 <<  endl;
-				ficSortie	<< "<tr>" << endl;
-				ficSortie	<< "<td  colspan='2'>" << endl;
-				ficSortie	<< colonne1 << endl;
-				ficSortie	<< "</td>" << endl;
-				ficSortie	<< "</tr>"<< endl;
+		numLigne+=1;
+		posFin=ligneEntree.size();
+		if (posFin>2) {
 
-			}
-			//<<<<<<<<<memo colonne 1 pour le coup d'apres
-			colonne1 = ligneEntree;
-			cout << "fTxtVersHtml, colonne1=" << colonne1 << endl;
-		}
-		else {
-			//<<<<<<<<<ecrire colonne 1 et colonne2 
-			colonne2 = ligneEntree.substr(pos+ texteCherche.length(), ligneEntree.length());
-			cout << "fTxtVersHtml, colonne2=" << colonne2 << " ; colonne1=" << colonne1 << endl;
+			posTab = ligneEntree.find("\t");
+			colonne1=ligneEntree.substr(0,posTab);
+			colonne2=ligneEntree.substr(posTab+1,posFin);
+			cout << "fCsvVersHtml, colonne1=" << colonne1 << endl;
+			cout << "fCsvVersHtml, colonne2=" << colonne2 << endl;
+
+			libelle=colonne2;
+			cout << "fCsvVersHtml, libelle=" << libelle << endl;
+
 			ficSortie	<< "<tr>" << endl;
+			ficSortie	<< "<td width='10'>" << endl;
+			ficSortie	<< numLigne << endl;
+			ficSortie	<< "</td>" << endl;
 			ficSortie	<< "<td width='400'>" << endl;
 			ficSortie	<< colonne1 << endl;
 			ficSortie	<< "</td>" << endl;
 			ficSortie	<< "<td>" << endl;
-			ficSortie	<< "<a href='" << ligneEntree  << "' target='fenetre F1'>" << colonne2 << "</a>" << "<br>" << endl;
+			ficSortie	<< "<a href='" << colonne2  << "' target='fenetre F1'>" << libelle << "</a>" << "<br>" << endl;
 			ficSortie	<< "</td>"<< endl;
 			ficSortie	<< "</tr>"<< endl;
-			//<<<<<<<<<raz colonne 
-			colonne1 = "";
-		}
 		
+		}
 	}
 
 	ficSortie	<< "</table>"<< endl;
@@ -103,7 +111,7 @@ void fTxtVersHtml(void) {
 
 	ficEntree.close();
 	ficSortie.close();
-	cout << "fTxtVersHtml, nomFicEntree=" << nomFicEntree << " nomFicSortie=" << nomFicSortie << " : OK !!!!!!!!!" << endl;
+	cout << "fCsvVersHtml, nomFicEntree=" << nomFicEntree << " nomFicSortie=" << nomFicSortie << " : OK !!!!!!!!!" << endl;
 	return;
 }
 
@@ -150,7 +158,7 @@ int main(void) {
     	sNomFic = fChoixNomFic();
 
     	if (sNomFic.length()>0) {
-			cout << "1 txt->html " << sNomFic << std::endl
+			cout << "1 csv->html " << sNomFic << std::endl
 				 << "9.sortie" << std::endl
 				 ;
 			cin >> val;
@@ -161,9 +169,9 @@ int main(void) {
 		string prefixeNomFichier;
 		prefixeNomFichier="./data/";
     	if (val == 1) {
-        	nomFicEntree= prefixeNomFichier + sNomFic+".txt";
-        	nomFicSortie= prefixeNomFichier + sNomFic+".fTxtVersHtml.html";
-        	fTxtVersHtml();
+        	nomFicEntree= prefixeNomFichier + sNomFic+".csv";
+        	nomFicSortie= prefixeNomFichier + sNomFic+".fCsvVersHtml.html";
+        	fCsvVersHtml();
     	}
     }
 
